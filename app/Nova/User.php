@@ -5,6 +5,7 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Illuminate\Support\Carbon;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Password;
@@ -63,9 +64,18 @@ class User extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
-            DateTime::make('Start'),
+            DateTime::make('Start')
+            ->help('test with any date with time equal to 8:00 am'),
 
-            Timezone::make('Timezone'),
+            Timezone::make('Timezone')
+                ->readonly()
+                ->help('timezone with +06:00'),
+
+            Text::make('UTC Date', 'start')->resolveUsing(function($value) {
+                return Carbon::parse($value, 'UTC')->toDateTimeString();
+            })
+            ->readonly()
+            ->help('it should be 14:00 instead of 13:00 for 8:00 am'),
 
             
         ];
