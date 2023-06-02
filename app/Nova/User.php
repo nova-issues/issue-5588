@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\Timezone;
 
 class User extends Resource
 {
@@ -63,6 +64,8 @@ class User extends Resource
                 ->updateRules('nullable', 'string', 'min:8'),
 
             DateTime::make('Start'),
+
+            Timezone::make('Timezone'),
 
             
         ];

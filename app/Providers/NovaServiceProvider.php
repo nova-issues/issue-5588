@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
-use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
+use Illuminate\Http\Request;
+use Laravel\Nova\Cards\Help;
+use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
@@ -17,6 +19,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Nova::serving(function (ServingNova $event) {
+
+            Nova::userTimezone(function (Request $request) {
+                return auth()->user()->timezone;
+            });
+
+        });
     }
 
     /**
@@ -30,7 +40,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 ->withAuthenticationRoutes()
                 ->withPasswordResetRoutes()
                 ->register();
+                
     }
+    
 
     /**
      * Register the Nova gate.
